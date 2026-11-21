@@ -1,6 +1,6 @@
 # 在 GitHub 上自动编译 ClawdPet.exe
 # - 每次推送 / PR：编译一次，编好的 exe 在这次运行的 Artifacts 里下载
-# - 推送 v 开头的标签（比如 v3.0.0）：再自动建一个 Release，把 exe 挂上去
+# - 推送 v 开头的标签（比如 v3.0.0），或者在 Actions 页面手动运行并填上版本号：再自动建一个 Release，把 exe 挂上去
 name: build
 
 on:
@@ -9,6 +9,11 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
+    inputs:
+      version:
+        description: '要发布的版本号（比如 v3.0.0），留空就只编译不发布'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -30,8 +35,9 @@ jobs:
           path: ClawdPet.exe
 
       - name: Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.version != '')
         shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$env:GITHUB_REF_NAME" ClawdPet.exe --title "$env:GITHUB_REF_NAME" --generate-notes
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+        run: gh release create "$env:TAG" ClawdPet.exe --target "$env:GITHUB_SHA" --title "$env:TAG" --generate-notes
