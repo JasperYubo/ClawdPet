@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Clawd 桌宠</title>
+<style>
+  :root { --bg: #FAF9F5; --card: #FFFFFF; --text: #1F1E1D; --muted: #75736B; --line: #E4E0D6; --accent: #D77757; --on-accent: #FFFFFF; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #262624; --card: #30302E; --text: #F0EEE6; --muted: #A9A69C; --line: #4A4944; --accent: #D97757; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; width: 320px; padding: 12px; background: var(--bg); color: var(--text);
+    font: 13px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans SC", "Noto Sans CJK SC", sans-serif; }
+  header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  header img { image-rendering: pixelated; }
+  h1 { flex: 1; margin: 0; font-size: 15px; }
+  h2 { display: flex; justify-content: space-between; align-items: baseline; margin: 14px 2px 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  h2 span { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .grid.two { grid-template-columns: 1fr 1fr; }
+  button, select, input { font: inherit; color: inherit; }
+  button { padding: 6px 4px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); padding: 6px 12px; }
+  button:disabled { opacity: .45; cursor: default; }
+  input[type=number], input[type=text], select { padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); min-width: 0; }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  input[type=number] { width: 64px; }
+  input[type=text] { flex: 1; }
+  .remind .row { border-top: 0; }
+  ul { list-style: none; margin: 6px 0 0; padding: 0; }
+  li { display: flex; align-items: center; gap: 6px; padding: 5px 0; border-top: 1px solid var(--line); }
+  li .rt { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  li .rw { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  li button { padding: 0 7px; line-height: 20px; }
+  .link { border: 0; background: none; color: var(--muted); padding: 4px 0 0; text-decoration: underline; }
+  .switch { position: relative; width: 36px; height: 20px; flex: none; }
+  .switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+  .switch span { position: absolute; inset: 0; border-radius: 10px; background: var(--line); transition: background .15s; }
+  .switch span::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+  .switch input:checked + span { background: var(--accent); }
+  .switch input:checked + span::after { transform: translateX(16px); }
+  .switch input:disabled { cursor: default; }
+  .switch input:disabled + span { opacity: .45; }
+  .tip { margin: 12px 2px 0; color: var(--muted); font-size: 12px; }
+  body.off main { opacity: .45; pointer-events: none; }
+</style>
+</head>
+<body>
+<header>
+  <img src="icons/icon32.png" width="24" height="24" alt="">
+  <h1>Clawd 桌宠</h1>
+  <label class="switch" title="在网页上显示 Clawd"><input type="checkbox" id="enabled"><span></span></label>
+</header>
+<main>
+  <div class="card">
+    <div class="row"><span id="siteLabel">本网站</span><label class="switch"><input type="checkbox" id="siteOn"><span></span></label></div>
+    <div class="row"><div class="grid" style="flex:1"><button id="summon">叫它过来</button><button id="feed">喂零食</button><button id="ball">扔个球</button><button id="dance">跳个舞</button></div></div>
+    <div class="row"><button id="dreamGame" style="flex:1">做个梦（钻进它的梦里玩横版小游戏）</button></div>
+  </div>
+
+  <h2>番茄钟 <span id="pomoStatus">未开始</span></h2>
+  <div class="grid">
+    <button data-mode="1" data-min="25">专注 25</button>
+    <button data-mode="1" data-min="50">专注 50</button>
+    <button data-mode="2" data-min="5">休息 5</button>
+    <button id="pomoStop">停止</button>
+  </div>
+
+  <h2>提醒我</h2>
+  <div class="card remind">
+    <div class="row"><span><input id="rmin" type="number" min="1" max="1440" value="10"> 分钟后提醒</span></div>
+    <div class="row"><input id="rtext" type="text" maxlength="100" placeholder="提醒什么？（可以不填）"><button id="radd" class="primary">添加</button></div>
+    <ul id="rlist"></ul>
+    <button id="rclear" class="link" hidden>清空全部提醒</button>
+  </div>
+
+  <h2>设置</h2>
+  <div class="card">
+    <div class="row"><span>跟着鼠标走</span><label class="switch"><input type="checkbox" id="follow"><span></span></label></div>
+    <div class="row"><span>两只 Clawd（会一起玩）</span><label class="switch"><input type="checkbox" id="count"><span></span></label></div>
+    <div class="row"><span>偶尔自言自语</span><label class="switch"><input type="checkbox" id="chatty"><span></span></label></div>
+    <div class="row"><span>久坐提醒（连续用 50 分钟）</span><label class="switch"><input type="checkbox" id="health"><span></span></label></div>
+    <div class="row"><span>大小</span>
+      <select id="size"><option value="0">小</option><option value="1">中</option><option value="2">大</option><option value="3">超大</option></select>
+    </div>
+  </div>
+</main>
+<p class="tip">在网页里右键点 Clawd 也有菜单。可以把它拎起来甩、扔到标题或图片上；鼠标在它身上停一下会冒出快捷按钮。更新扩展请覆盖原来的文件夹再点刷新，别重复「加载已解压的扩展程序」。</p>
+<script src="popup.js"></script>
+</body>
+</html>
