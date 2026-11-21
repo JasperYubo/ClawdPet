@@ -1,0 +1,14 @@
+# 编译出来的文件、备份、打包
+*.exe
+*.zip
+*.bak
+*.log
+
+# 签名证书和私钥，千万别传
+*.pfx
+*.p12
+*.pvk
+*.snk
+
+# 只在自己电脑上用的脚本
+upload-to-server.cmd
