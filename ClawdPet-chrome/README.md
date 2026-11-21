@@ -1,7 +1,5 @@
 # Clawd 桌宠 · Chrome 扩展版
 
-> 非官方粉丝作品，和 Anthropic 没有关系。Clawd 的名字和形象归 Anthropic 所有。
-
 Clawd 住进你的网页里，Chromebook 和任何电脑上的 Chrome 都能用。默认是两只，会一起玩。
 
 ## 安装
