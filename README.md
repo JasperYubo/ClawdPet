@@ -1,9 +1,5 @@
 # Clawd 桌宠
 
-> **非官方粉丝作品。** Clawd 是 Anthropic 家 Claude Code 的吉祥物。这个项目是粉丝自己做着玩的，和 Anthropic 没有任何关系，也没有得到 Anthropic 的认可或授权。Clawd 的名字和形象归 Anthropic 所有；本仓库的开源协议只管代码，不包括这个角色形象。
->
-> *Unofficial fan project. Clawd is the Claude Code mascot by Anthropic. This project is not affiliated with, endorsed or sponsored by Anthropic. The MIT license covers the code only, not the character.*
-
 一只住在 Windows 桌面上的像素 Clawd：会走、会坐、会爬墙、会挖沙把自己埋起来、会架根木杆爬到别的窗口上，能喂零食、扔球陪它玩，还能和 Claude Code 联动——Claude 在干活它就敲键盘，干完了它跳起来告诉你。
 
 另外还有一个 **Chrome 扩展版**，Clawd 住在网页里，Chromebook 也能用，见 [ClawdPet-chrome](ClawdPet-chrome/README.md)。
